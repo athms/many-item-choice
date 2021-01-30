@@ -55,7 +55,7 @@ The "gaze_corrected" columns in the summary data files (located in [data/summary
 
 **2. Running fit_models.py:**
 
-In order to compute [Figure](Figure-5-6_model-comparison.ipynb) 5, you need to first run [fit_models.py](fit_models.py). This script fits all variants of the PSM, IAM, and GLAM for an individual subject in one set size condition. You can specify the subject and set size condition when running fit_models.py as follows:
+In order to compute [Figure 5](Figure-5-6_model-comparison.ipynb), you need to first run [fit_models.py](fit_models.py). This script fits all variants of the PSM, IAM, and GLAM for an individual subject in one set size condition. You can specify the subject and set size condition when running fit_models.py as follows:
 
 ```bash
 python fit_models.py <subject> <set size>

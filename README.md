@@ -23,7 +23,7 @@ I recommend setting up a new Python environment (e.g., with the [miniconda insta
 You can create a new [conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) using the following command:
 
 ```bash
-conda create --name many-item-choice python==3.6
+conda create --name many-item-choice python=3.6
 ```
 
 This will create a Python 3.6 environment with the name `many-item-choice`.

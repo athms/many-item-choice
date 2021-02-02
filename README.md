@@ -13,7 +13,7 @@ Each jupyter notebook reproduces one of the figures of the manuscript.
 
 ```bash
 git clone https://github.com/athms/many-item-choice.git
-cd deep-learning-basics
+cd many-item-choice
 ```
 
 **2. Install all dependencies** listed in [`requirements.txt`](requirements.txt). 

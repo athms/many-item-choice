@@ -3,9 +3,10 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import invgauss
+from .utils import add_gaze_corrected
 
 
-def predict(data, estimates, n_repeats=1, boundary=1., error_weight=0.05, **kwards):
+def predict(data, gaze_data, estimates, n_repeats=1, boundary=1., error_weight=0.05, **kwards):
     """
     Simulate response data for all
     subjects in dataframe.
@@ -32,6 +33,11 @@ def predict(data, estimates, n_repeats=1, boundary=1., error_weight=0.05, **kwar
 
     for s, subject in enumerate(subjects):
 
+        # subset data
+        sub_data = data[data['subject']==subject].copy()
+        sub_gaze_data = gaze_data[gaze_data['subject']==subject].copy()
+
+        # get estimates
         parameters = np.array([estimates.get(parameter)[s]
                                for parameter in
                                ['v', 'gamma', 'zeta', 's']])
@@ -42,15 +48,18 @@ def predict(data, estimates, n_repeats=1, boundary=1., error_weight=0.05, **kwar
         fixation_onset_cols = ['fixation_onset_{}'.format(i) for i in range(n_items)]
         stimulus_cols = ['stimulus_{}'.format(i) for i in range(n_items)]
 
-        values = data[value_cols][data['subject'] == subject].values
-        gaze = data[gaze_cols][data['subject'] == subject].values
-        gaze_corrected = data[gaze_corrected_cols][data['subject'] == subject].values
-        fixation_onset = data[fixation_onset_cols][data['subject'] == subject].values
-        stimuli = data[stimulus_cols][data['subject'] == subject].values
-        trial_indeces = data[data['subject'] == subject]['trial'].values
+        # add gaze_corrected
+        sub_data = add_gaze_corrected(sub_data, sub_gaze_data)
 
-        rt_min = data['rt'][data['subject'] == subject].values.min()
-        rt_max = data['rt'][data['subject'] == subject].values.max()
+        values = sub_data[value_cols].values
+        gaze = sub_data[gaze_cols].values
+        gaze_corrected = sub_data[gaze_corrected_cols].values
+        fixation_onset = sub_data[fixation_onset_cols].values
+        stimuli = sub_data[stimulus_cols].values
+        trial_indeces = sub_data['trial'].values
+
+        rt_min = sub_data['rt'].values.min()
+        rt_max = sub_data['rt'].values.max()
         error_range = (rt_min, rt_max)
 
         subject_prediction = simulate_subject(parameters,

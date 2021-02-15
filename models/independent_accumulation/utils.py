@@ -39,31 +39,86 @@ def sort_according_to_seen(x, gaze):
     return x_sorted
 
 
-def format_data(df):
+def add_gaze_corrected(data, gaze_data):
+    """
+    Add gaze_corrected column per item,
+    indicating the fraction of trial time
+    that the item was looked at,
+    after it was first seen in the trial:
+
+    Args
+    ---
+        data (dataframe): aggregate response data
+        gaze_data (dataframe): gaze data
+
+    Returns
+    ---
+        copy of data
+    """
+
+    # read set sizes
+    setsize = int(np.unique(data['setsize']))
+    subject = int(np.unique(data['subject']))
+    assert setsize == np.unique(gaze_data['setsize']), 'Set size does not match in data and gaze data'
+    assert subject == np.unique(gaze_data['subject']), 'Subject does not match in data and gaze data'
+
+    df = data.copy()
+    gaze_df = gaze_data.copy()
+
+    # insert blank gaze_corrected columns
+    trials = np.unique(df['trial'])
+    for item in range(setsize):
+        df['gaze_corrected_{}'.format(item)] = 0
+
+    # iterate trials
+    for trial in trials:
+        trial_df = df[df['trial']==trial].copy()
+        trial_gaze_df = gaze_df[gaze_df['trial']==trial].copy()
+        trial_rt = trial_df['rt'].values[0]
+        # iterate items
+        for item in range(setsize):
+            # when item was first seen
+            item_fix_onset = trial_df['fixation_onset_{}'.format(item)].values[0]
+            if trial_rt > item_fix_onset:
+                # how long it was seen
+                item_seen_time = trial_rt - item_fix_onset
+                # fraction looked at of item seen time
+                item_fix_data = trial_gaze_df[trial_gaze_df['item']==item].copy()
+                df.loc[df['trial']==trial, 'gaze_corrected_{}'.format(item)] = item_fix_data['dur'].sum() / item_seen_time
+
+    return df
+
+
+def format_data(data, gaze_data):
     """
     Extracts and formats data
     from dataframe to model friendly entities.
 
     Args
     ---
-        df (dataframe): aggregate response data
+        data (dataframe): aggregate response data
 
     Returns
     ---
         dict with data entities
     """
-    assert len(df['subject'].unique())==1, '/!\ too many subjects in data.'
-    n_items = len([col for col in df.columns
-                   if col.startswith('item_value_')])
-    assert len(df['setsize'].unique())==1, '/!\ too many set sizes in data.'
-    assert df['setsize'].unique()[0]==n_items, '/!\ missmatch in setsizes in data.'
+    assert len(data['subject'].unique())==1, '/!\ too many subjects in data.'
+    assert len(gaze_data['subject'].unique())==1, '/!\ too many subjects in gaze_data.'
+    n_items = len([col for col in data.columns if col.startswith('item_value_')])
+    assert len(data['setsize'].unique())==1, '/!\ too many set sizes in data.'
+    assert len(gaze_data['setsize'].unique())==1, '/!\ too many set sizes in gaze_data.'
+    assert data['setsize'].unique()[0]==n_items, '/!\ missmatch in setsizes in data.'
+    assert gaze_data['setsize'].unique()[0]==n_items, '/!\ missmatch in setsizes in gaze_data.'
+
+    # add gaze-corrected data columns
+    data = add_gaze_corrected(data, gaze_data)
 
     # extract data
-    gaze_corrected = df[['gaze_corrected_{}'.format(i) for i in range(n_items)]].values
-    fixation_onset = df[['fixation_onset_{}'.format(i) for i in range(n_items)]].values
-    values = df[['item_value_{}'.format(i) for i in range(n_items)]].values
-    choice = df['choice'].values.astype(int)
-    rts = df['rt'].values.astype(int)
+    gaze_corrected = data[['gaze_corrected_{}'.format(i) for i in range(n_items)]].values
+    fixation_onset = data[['fixation_onset_{}'.format(i) for i in range(n_items)]].values
+    values = data[['item_value_{}'.format(i) for i in range(n_items)]].values
+    choice = data['choice'].values.astype(int)
+    rts = data['rt'].values.astype(int)
 
     # sort so that choices are in the firts column
     gaze_corrected = sort_according_to_choice(gaze_corrected, choice)
@@ -79,7 +134,7 @@ def format_data(df):
     values_scaled = values + 4
 
     # compute random choice likelihood
-    error_ll = 1. / np.float(n_items * (df['rt'].max() - df['rt'].min()))
+    error_ll = 1. / np.float(n_items * (data['rt'].max() - data['rt'].min()))
 
     # package data
     output = dict(gaze_corrected=gaze_corrected,
@@ -89,63 +144,3 @@ def format_data(df):
                   error_ll=error_ll,
                   n_seen=n_seen.astype(np.int32))
     return output
-
-
-#
-# def extract_modes(traces, parameters=None, precision=None, f_burn=0.5):
-#     """
-#     Extract modesl from PyMC3 traces.
-#
-#     Input
-#     ---
-#     traces (PyMC3 traces):
-#             single trace of list of traces
-#             from which modes to extract
-#
-#     parameters (array):
-#             names of parameters for which
-#             to extract modes
-#
-#     precision (array):
-#             decimal precision to round
-#             trace values to prior to mode
-#             extraction
-#
-#     f_burn (float):
-#             fraction of trace to discard at
-#             beginning prior to extracting
-#             modes
-#
-#     Returns
-#     ---
-#     dict(s) indicating parameter modes
-#     """
-#
-#     if not isinstance(traces, list):
-#         traces = [traces]
-#
-#     modes = []
-#
-#     for trace in traces:
-#
-#         if parameters is None:
-#             parameters = [var for var in trace.varnames
-#                           if not var.endswith('__')]
-#
-#             print('/!\ Automatically setting parameter precision...')
-#             precision_defaults = dict(v=6, gamma=2, tau=2, s=6, SNR=2,  t0=-1)
-#             precision = [precision_defaults.get(parameter.split('_')[0], 6)
-#                          for parameter in parameters]
-#
-#         n_samples = len(trace)
-#         trace_modes = {}
-#
-#         for parameter, prec in zip(parameters, precision):
-#             trace_modes[parameter] = mode(np.round(trace.get_values(
-#                 parameter, burn=int(f_burn*n_samples)), prec))[0][0]
-#         modes.append(trace_modes)
-#
-#     if len(modes) == 1:
-#         return modes[0]
-#     else:
-#         return modes

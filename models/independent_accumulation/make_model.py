@@ -8,14 +8,14 @@ import theano.tensor as tt
 import theano
 
 
-def make_ind_model(data_df, gaze_bias=True, **kwargs):
+def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, **kwargs):
 	"""
-	Create a individual model from data_df.
-	data_df can only include data of a single subject.
+	Create a individual model from subject_data.
+	subject_data can only include data of a single subject.
 
 	Args
 	---
-		data_df (dataframe): Aggregate response data
+		subject_data (dataframe): Aggregate response data
 		gaze_bias (bool): whether to activate gaze bias
             or to set gamma=1 and zeta=0
 
@@ -24,11 +24,11 @@ def make_ind_model(data_df, gaze_bias=True, **kwargs):
 		PyMC3 model object
 	"""
 
-	assert len(data_df['subject'].unique()
-			   ) == 1, 'data_df contains more than 1 subject.'
+	assert len(subject_data['subject'].unique()
+			   ) == 1, 'subject_data contains more than 1 subject.'
 
 	# format data
-	data_dict = format_data(data_df)
+	data_dict = format_data(subject_data, subject_gaze_data)
 
 	with pm.Model() as ind_model:
 

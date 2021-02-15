@@ -8,7 +8,7 @@ import theano.tensor as tt
 from .utils import format_data
 
 
-def make_ind_model(subject_data_df, subject_gaze_data, gaze_bias=True, zerorol=1e-10):
+def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, zerorol=1e-10):
     """
     Make single subject probabilistic satisficing choice model.
 
@@ -27,10 +27,10 @@ def make_ind_model(subject_data_df, subject_gaze_data, gaze_bias=True, zerorol=1
         Single subject hybrid choice model
     """
 
-    assert len(subject_data_df['subject'].unique()) == 1, 'data_df contains more than 1 subject.'
+    assert len(subject_data['subject'].unique()) == 1, 'data_df contains more than 1 subject.'
 
     # format data
-    data_dict = format_data(subject_data_df, subject_gaze_data)
+    data_dict = format_data(subject_data, subject_gaze_data)
 
     # make ind model
     with pm.Model() as ind_model:

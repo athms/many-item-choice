@@ -206,7 +206,7 @@ def add_best_chosen(df):
         values, axis=1)).astype(int)
     df['best_chosen'] = best_chosen
     return df
-
+    
 
 def compute_mean_rt(df):
     """
@@ -348,6 +348,7 @@ def aggregate_subject_level_data(data, n_items):
     pandas.DataFrame
         DataFrame of subject-level response characteristics.
     """
+    # make copy of data
     data = data.copy()
 
     # add best chosen variable

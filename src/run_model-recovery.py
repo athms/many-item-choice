@@ -39,10 +39,14 @@ if __name__ == '__main__':
     sim_subjects = np.random.choice(subjects, n_sim_subjects, replace=False)
     n_draws = 5000
 
-    # create output directories
-    make_sure_path_exists('results/model_recovery/simulated_data/')
-    make_sure_path_exists('results/model_recovery/waic/')
-    make_sure_path_exists('results/model_recovery/posterior_traces/')
+    # directories
+    data_dir = '../data/'
+    results_dir = '../results/'
+
+    # make sure output dir exists
+    make_sure_path_exists(results_dir+'model_recovery/simulated_data/')
+    make_sure_path_exists(results_dir+'model_recovery/waic/')
+    make_sure_path_exists(results_dir+'model_recovery/posterior_traces/')
 
     # set rounding for model parameters
     to_round = {'probabilistic_satisficing': [8, 8, 2, 2, 2],
@@ -65,13 +69,13 @@ if __name__ == '__main__':
 
             # load data
             print('\tLoading empirical data..')
-            full_data = pd.read_csv('data/summary_files/{}_data.csv'.format(setsize))
+            full_data = pd.read_csv(data_dir+'summary_files/{}_data.csv'.format(setsize))
             sub_data = full_data[full_data['subject']==sim_sub].copy()
-            sub_gaze_data = pd.read_csv('data/subject_files/{}_{}_fixations.csv'.format(sim_sub, setsize))
+            sub_gaze_data = pd.read_csv(data_dir+'subject_files/{}_{}_fixations.csv'.format(sim_sub, setsize))
 
             # get par estimates
             print('\tLoading parameter estimates..')
-            trace_file = 'results/posterior_traces/{}_{}/{}_{}_mtrace.csv'.format(
+            trace_file = results_dir+'posterior_traces/{}_{}/{}_{}_mtrace.csv'.format(
                     gen_model_name, gen_gaze_bias, sim_sub, setsize)
             if os.path.isfile(trace_file):
                 sub_trace_df = pd.read_csv(trace_file)
@@ -80,7 +84,7 @@ if __name__ == '__main__':
                     sub_est[parameter] = mode(np.round(sub_trace_df[parameter].values, precision))[0]
 
             # define simulation results filepath
-            sim_res_filepath = 'results/model_recovery/simulated_data/sub-{}_gen-{}_simulated-data.csv'.format(
+            sim_res_filepath = results_dir+'model_recovery/simulated_data/sub-{}_gen-{}_simulated-data.csv'.format(
                 sim_sub, '-'.join((gen_model_name+'_'+gen_gaze_bias).split('_')))
             if not os.path.isfile(sim_res_filepath):
 
@@ -108,7 +112,7 @@ if __name__ == '__main__':
 
             # fit each model
             # define WAIC results filepath
-            waic_res_file = 'results/model_recovery/waic/sub-{}_gen-{}_rec-waic.csv'.format(
+            waic_res_file = results_dir+'model_recovery/waic/sub-{}_gen-{}_rec-waic.csv'.format(
                 sim_sub, '-'.join((gen_model_name+'_'+gen_gaze_bias).split('_')))
             if not os.path.isfile(waic_res_file):
                 WAIC = pd.DataFrame()
@@ -128,7 +132,7 @@ if __name__ == '__main__':
                 fit_model = True
 
                 # define output trace filepath
-                trace_res_file = 'results/model_recovery/posterior_traces/sub-{}_gen-{}_rec-{}_mtrace.csv'.format(
+                trace_res_file = results_dir+'model_recovery/posterior_traces/sub-{}_gen-{}_rec-{}_mtrace.csv'.format(
                     sim_sub,
                     '-'.join((gen_model_name+'_'+gen_gaze_bias).split('_')),
                     '-'.join((rec_model_name+'_'+rec_gaze_bias).split('_')))

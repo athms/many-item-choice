@@ -144,7 +144,6 @@ def trialdrift(v, tau, gamma, zeta, values, gaze, zerotol=1e-10):
     """
     Compute drifts
     """
-
     A = gaze * (values + zeta) + (1 - gaze) * gamma * values
 
     n_items = len(A)
@@ -154,5 +153,6 @@ def trialdrift(v, tau, gamma, zeta, values, gaze, zerotol=1e-10):
     R_star = A - max_others
     R = v * 1 / (1 + np.exp(-tau * R_star))
 
+    R[gaze==0] = 0
     R[R < zerotol] = zerotol
     return R

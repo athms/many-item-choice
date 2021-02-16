@@ -48,7 +48,7 @@ jupyter notebook
 
 ### A few notes before computing the notebooks
 
-This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the `results` directory. Thus, If you want to re-compute a specific (or all) results, delete (or rename) the respective results files / folders. 
+This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the `results/` directory. Thus, If you want to re-compute a specific (or all) results, delete (or rename) the respective results files / folders. 
 
 **1. Fitting the individual models:**
 
@@ -70,7 +70,7 @@ for setsize in 9 16 25 36; do
 done
 ```
 
-**3. Running run_model_recovery.py:**
+**2. Running the model recovery:**
 
 The model recovery can be computed by the use of [src/model-recovery.py](src/model-recovery.py) script, before computing all figure supplements of Figure 5:
 

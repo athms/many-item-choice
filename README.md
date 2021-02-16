@@ -4,7 +4,7 @@ This repository contains all code and data for:
 
 Thomas, A., Molter, F., & Krajbich, I. (2020, March 19). Uncovering the Computational Mechanisms Underlying Many-Alternative Choice. https://doi.org/10.31234/osf.io/tk6qe
 
-Each jupyter notebook in `src/` reproduces one of the figures of the manuscript. 
+Each jupyter notebook in [src/](src/) reproduces one of the figures of the manuscript. 
 
 
 ### Local installation and running the notebooks
@@ -48,7 +48,7 @@ jupyter notebook
 
 ### A few notes before computing the notebooks
 
-This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the `results/` directory. Thus, If you want to re-compute a specific (or all) results, delete (or rename) the respective results files / folders. 
+This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the [results/](results/) directory. Thus, if you want to re-compute a specific (or all) results, delete (or rename) the respective output files or folders. 
 
 **1. Fitting the individual models:**
 

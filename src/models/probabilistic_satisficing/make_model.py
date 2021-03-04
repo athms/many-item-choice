@@ -16,7 +16,7 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, zerorol=1e-1
     ---
         subject_data_df (dataframe): aggregate response
             data of a single subject
-        subject_fixation_data (dataframe): aggregate fixation
+        subject_gaze_data (dataframe): aggregate gaze
             data of a single subject
         gaze_bias (bool): whether to activate gaze bias
             or to set gamma=1 and zeta=0
@@ -24,7 +24,7 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, zerorol=1e-1
 
     Returns
     ---
-        Single subject hybrid choice model
+        PyMC3 model object
     """
 
     assert len(subject_data['subject'].unique()) == 1, 'data_df contains more than 1 subject.'
@@ -65,12 +65,12 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, zerorol=1e-1
             return q_corrected, C
 
         # logp
-        def hybrid_logp(rt,
-                        choice,
-                        gaze_t,
-                        value_t,
-                        error_ll,
-                        zerotol):
+        def logp_ind(rt,
+                     choice,
+                     gaze_t,
+                     value_t,
+                     error_ll,
+                     zerotol):
             # compute stopping probability
             n_trials = value_t.shape[0]
             n_items = value_t.shape[1]
@@ -93,7 +93,7 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, zerorol=1e-1
 
         # data
         obs = pm.DensityDist('obs',
-                logp=hybrid_logp,
+                logp=logp_ind,
                 observed=dict(rt=data_dict['rt'],
                               choice=data_dict['choice'],
                               gaze_t=data_dict['gaze_t'],

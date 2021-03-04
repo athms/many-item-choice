@@ -38,12 +38,12 @@ if __name__ == '__main__':
     np.random.seed(seed)
 
     # load data
-    data = pd.read_csv(data_dir+'summary_files/{}_data.csv'.format(setsize))
+    data = pd.read_csv(data_dir+'summary_files/setsize-{}_desc-data.csv'.format(setsize))
     # subset to subject
     subject_data = data[data['subject']==subject].copy()
 
     # load gaze data
-    subject_gaze_data = pd.read_csv(data_dir+'subject_files/{}_{}_fixations.csv'.format(subject, setsize))
+    subject_gaze_data = pd.read_csv(data_dir+'subject_files/sub-{}_setsize-{}_desc-gazes.csv'.format(subject, setsize))
 
     # iterate over models
     for model_name in ['probabilistic_satisficing', 'independent_accumulation', 'GLAM']:
@@ -70,7 +70,7 @@ if __name__ == '__main__':
             print('\tModel: {}_{}'.format(model_name, gaze_bias))
 
             # estimate
-            waic_filepath = results_dir+'waic/{}_{}/{}_{}_waic.csv'.format(
+            waic_filepath = results_dir+'waic/{}_{}/sub-{}_setsize-{}_desc-waic.csv'.format(
                 model_name, gaze_bias, subject, setsize)
             if not os.path.isfile(waic_filepath):
                 print('\t\tEstimating parameters')
@@ -100,15 +100,15 @@ if __name__ == '__main__':
                 print('\t\tSaving results')
                 mtrace_df = pm.trace_to_dataframe(mtrace)
                 mtrace_df.to_csv(
-                    results_dir+'posterior_traces/{}_{}/{}_{}_mtrace.csv'.format(
+                    results_dir+'posterior_traces/{}_{}/sub-{}_setsize-{}_desc-mtrace.csv'.format(
                         model_name, gaze_bias, subject, setsize), index=False)
                 mtrace_summary = az.summary(mtrace, round_to="none")
                 mtrace_summary.to_csv(
-                    results_dir+'posterior_traces/{}_{}/{}_{}_mtrace_summary.csv'.format(
+                    results_dir+'posterior_traces/{}_{}/sub-{}_setsize-{}_desc-mtrace_summary.csv'.format(
                         model_name, gaze_bias, subject, setsize))
                 traceplot(mtrace)
                 plt.savefig(
-                    results_dir+'posterior_traces/{}_{}/{}_{}_mtrace.png'.format(
+                    results_dir+'posterior_traces/{}_{}/sub-{}_setsize-{}_desc-mtrace.png'.format(
                         model_name, gaze_bias, subject, setsize), dpi=110)
                 plt.close()
                 waic_res = pm.waic(mtrace, pymc_model, scale='log')
@@ -120,14 +120,14 @@ if __name__ == '__main__':
                 waic_df.to_csv(waic_filepath)
 
             # simulate
-            prediction_filepath = results_dir+'predictions/{}_{}/{}_{}_prediction.csv'.format(
+            prediction_filepath = results_dir+'predictions/{}_{}/sub-{}_setsize-{}_desc-prediction.csv'.format(
                 model_name, gaze_bias, subject, setsize)
             if not os.path.isfile(prediction_filepath):
                 print('\t\tSimulating data..')
 
                 # extract parameter estimates
                 mtrace_df = pd.read_csv(
-                    results_dir+'posterior_traces/{}_{}/{}_{}_mtrace.csv'.format(
+                    results_dir+'posterior_traces/{}_{}/sub-{}_setsize-{}_desc-mtrace.csv'.format(
                         model_name, gaze_bias, subject, setsize))
                 estimates = dict()
                 for parameter, precision in zip(model_parameters, to_round):

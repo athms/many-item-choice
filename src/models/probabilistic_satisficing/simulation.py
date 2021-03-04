@@ -51,11 +51,11 @@ def predict(data, gaze_data, estimates, n_repeats=1, error_weight=0.05, error_ra
         parameters = [estimates.get(parameter)[s]
                       for parameter in ['v', 'alpha', 'gamma', 'zeta', 'tau']]
 
-        # stimuli
+        # extract data
         value_cols = ['item_value_{}'.format(i) for i in range(n_items)]
         values = data_subject[value_cols].values
 
-        gaze_cols = ['gaze_{}'.format(i) for i in range(n_items)]
+        gaze_cols = ['cumulative_gaze_{}'.format(i) for i in range(n_items)]
         gaze = data_subject[gaze_cols].values
 
         stimulus_cols = ['stimulus_{}'.format(i) for i in range(n_items)]
@@ -65,11 +65,12 @@ def predict(data, gaze_data, estimates, n_repeats=1, error_weight=0.05, error_ra
         value_t = data_dict['value_t']
         gaze_t = data_dict['gaze_t']
 
-        # rt range
+        # error range
         rt_min = data_subject['rt'].values.min()
         rt_max = data_subject['rt'].values.max()
         error_range = (rt_min, rt_max)
 
+        # simulate subject
         subject_prediction = simulate_subject(parameters,
                                               value_t, gaze_t,
                                               values, gaze, stimuli,
@@ -124,7 +125,7 @@ def simulate_subject(parameters, value_t, gaze_t, values, gaze, stimuli, trials,
 
     for i in range(n_items):
         df['item_value_{}'.format(i)] = np.repeat(values[:, i], n_repeats)
-        df['gaze_{}'.format(i)] = np.repeat(gaze[:, i], n_repeats)
+        df['cumulative_gaze_{}'.format(i)] = np.repeat(gaze[:, i], n_repeats)
         df['stimulus_{}'.format(i)] = np.repeat(stimuli[:, i], n_repeats)
 
     df = df[np.isfinite(df['choice'].values)].copy()

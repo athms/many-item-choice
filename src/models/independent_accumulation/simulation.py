@@ -14,6 +14,7 @@ def predict(data, gaze_data, estimates, n_repeats=1, boundary=1., error_weight=0
     Args
     ---
         data (dataframe): aggregate respone data
+        gaze_data (dataframe): aggregate gaze data 
         estimates (dict): dict of parameter estimates
         n_repeats (int): how often to repeat each trial
         boundary (float): decision boundary
@@ -42,29 +43,33 @@ def predict(data, gaze_data, estimates, n_repeats=1, boundary=1., error_weight=0
                                for parameter in
                                ['v', 'gamma', 'zeta', 's']])
 
+        # set cols to extract
         value_cols = ['item_value_{}'.format(i) for i in range(n_items)]
-        gaze_cols = ['gaze_{}'.format(i) for i in range(n_items)]
-        gaze_corrected_cols = ['gaze_corrected_{}'.format(i) for i in range(n_items)]
-        fixation_onset_cols = ['fixation_onset_{}'.format(i) for i in range(n_items)]
+        gaze_cols = ['cumulative_gaze_{}'.format(i) for i in range(n_items)]
+        gaze_onset_cols = ['gaze_onset_{}'.format(i) for i in range(n_items)]
         stimulus_cols = ['stimulus_{}'.format(i) for i in range(n_items)]
 
-        # add gaze_corrected
+        # add gaze_corrected columns
         sub_data = add_gaze_corrected(sub_data, sub_gaze_data)
+        gaze_corrected_cols = ['gaze_corrected_{}'.format(i) for i in range(n_items)]
 
+        # extract data
         values = sub_data[value_cols].values
         gaze = sub_data[gaze_cols].values
         gaze_corrected = sub_data[gaze_corrected_cols].values
-        fixation_onset = sub_data[fixation_onset_cols].values
+        gaze_onset = sub_data[gaze_onset_cols].values
         stimuli = sub_data[stimulus_cols].values
         trial_indeces = sub_data['trial'].values
 
+        # define error range
         rt_min = sub_data['rt'].values.min()
         rt_max = sub_data['rt'].values.max()
         error_range = (rt_min, rt_max)
 
+        # simulate subject
         subject_prediction = simulate_subject(parameters,
                                               values,
-                                              gaze, gaze_corrected, fixation_onset,
+                                              gaze, gaze_corrected, gaze_onset,
                                               stimuli,
                                               trial_indeces,
                                               n_repeats=n_repeats,
@@ -77,7 +82,7 @@ def predict(data, gaze_data, estimates, n_repeats=1, boundary=1., error_weight=0
     return prediction
 
 
-def simulate_subject(parameters, values, gaze, gaze_corrected, fixation_onset, stimuli, trials,
+def simulate_subject(parameters, values, gaze, gaze_corrected, gaze_onset, stimuli, trials,
                      n_repeats=1, subject=0, boundary=1, error_weight=0.05, error_range=(0, 5000)):
     """
     Simulate subject
@@ -100,7 +105,7 @@ def simulate_subject(parameters, values, gaze, gaze_corrected, fixation_onset, s
             while not choice_made:
                 choice, rt = simulate_trial(parameters,
                                             values[trial],
-                                            gaze_corrected[trial], fixation_onset[trial],
+                                            gaze_corrected[trial], gaze_onset[trial],
                                             boundary=boundary,
                                             error_weight=error_weight,
                                             error_range=error_range)
@@ -122,13 +127,13 @@ def simulate_subject(parameters, values, gaze, gaze_corrected, fixation_onset, s
 
     for i in range(n_items):
         df['item_value_{}'.format(i)] = np.repeat(values[:, i], n_repeats)
-        df['gaze_{}'.format(i)] = np.repeat(gaze[:, i], n_repeats)
+        df['cumulative_gaze_{}'.format(i)] = np.repeat(gaze[:, i], n_repeats)
         df['stimulus_{}'.format(i)] = np.repeat(stimuli[:, i], n_repeats)
 
     return df
 
 
-def simulate_trial(parameters, values, gaze_corrected, fixation_onset, boundary=1, error_weight=0.05, error_range=(0, 5000)):
+def simulate_trial(parameters, values, gaze_corrected, gaze_onset, boundary=1, error_weight=0.05, error_range=(0, 5000)):
     """
     Simulate trial
     """
@@ -147,9 +152,9 @@ def simulate_trial(parameters, values, gaze_corrected, fixation_onset, boundary=
         lam = float(boundary**2) / (s**2)
         FPTs = invgauss.rvs(mu=mu/lam, scale=lam)
 
-        # add fixation onset
-        fixation_onset[gaze_corrected==0] = np.inf
-        FPTs += fixation_onset
+        # add gaze onset
+        gaze_onset[gaze_corrected==0] = np.inf
+        FPTs += gaze_onset
 
         choice = np.nanargmin(FPTs)
         rt = int(np.round(FPTs[choice]))

@@ -65,11 +65,10 @@ def tt_trialdrift(v, tau, gamma, zeta, values, gaze, zerotol):
     Computes drifts
     """
 
-    # set all values = 0 for items that were not seen
-    values = tt.where(tt.eq(gaze, tt.zeros_like(gaze)), tt.zeros_like(values), values)
-
+    # absolute decision signals
     A = gaze * (values + zeta) + (1 - gaze) * gamma * values
 
+    # relative decision signals
     n_items = tt.cast(A.shape[1], dtype='int32')
     stacked_A = tt.repeat(A, repeats=n_items, axis=1).T
     stacked_A_reshaped = tt.reshape(stacked_A,

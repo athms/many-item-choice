@@ -78,10 +78,10 @@ def add_gaze_corrected(data, gaze_data):
         # iterate items
         for item in range(setsize):
             # when item was first seen
-            item_fix_onset = trial_df['fixation_onset_{}'.format(item)].values[0]
+            item_gaze_onset = trial_df['gaze_onset_{}'.format(item)].values[0]
             if trial_rt > item_fix_onset:
                 # how long it was seen
-                item_seen_time = trial_rt - item_fix_onset
+                item_seen_time = trial_rt - item_gaze_onset
                 # fraction looked at of item seen time
                 item_fix_data = trial_gaze_df[trial_gaze_df['item']==item].copy()
                 df.loc[df['trial']==trial, 'gaze_corrected_{}'.format(item)] = item_fix_data['dur'].sum() / item_seen_time
@@ -115,19 +115,19 @@ def format_data(data, gaze_data):
 
     # extract data
     gaze_corrected = data[['gaze_corrected_{}'.format(i) for i in range(n_items)]].values
-    fixation_onset = data[['fixation_onset_{}'.format(i) for i in range(n_items)]].values
+    gaze_onset = data[['gaze_onset_{}'.format(i) for i in range(n_items)]].values
     values = data[['item_value_{}'.format(i) for i in range(n_items)]].values
     choice = data['choice'].values.astype(int)
     rts = data['rt'].values.astype(int)
 
     # sort so that choices are in the firts column
     gaze_corrected = sort_according_to_choice(gaze_corrected, choice)
-    fixation_onset = sort_according_to_choice(fixation_onset, choice)
+    gaze_onset = sort_according_to_choice(gaze_onset, choice)
     values = sort_according_to_choice(values, choice)
 
     # sort according to seen
     gaze_corrected = sort_according_to_seen(gaze_corrected, gaze_corrected)
-    fixation_onset = sort_according_to_seen(fixation_onset, gaze_corrected)
+    gaze_onset = sort_according_to_seen(gaze_onset, gaze_corrected)
     values = sort_according_to_seen(values, gaze_corrected)
     n_seen = np.sum(np.isfinite(gaze_corrected), axis=1)
     # re-scale values to 1 - 7
@@ -138,7 +138,7 @@ def format_data(data, gaze_data):
 
     # package data
     output = dict(gaze_corrected=gaze_corrected,
-                  fixation_onset=fixation_onset,
+                  gaze_onset=gaze_onset,
                   values=values_scaled,
                   rts=rts,
                   error_ll=error_ll,

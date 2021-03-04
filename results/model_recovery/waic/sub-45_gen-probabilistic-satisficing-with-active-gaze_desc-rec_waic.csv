@@ -1,0 +1,4 @@
+rec_model,WAIC,WAIC_se,WAIC_scale
+probabilistic_satisficing_with_active_gaze,-427.313811826248,8.458264774043387,log
+independent_accumulation_with_active_gaze,-470.52318198363565,11.299883486119315,log
+GLAM_with_active_gaze,-442.88080991804725,11.174364734966593,log

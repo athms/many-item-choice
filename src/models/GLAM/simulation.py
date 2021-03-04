@@ -37,7 +37,7 @@ def predict(data, estimates, n_repeats=1, boundary=1., error_weight=0.05, **kwar
                                ['v', 'gamma', 'zeta', 's', 'tau']])
 
         value_cols = ['item_value_{}'.format(i) for i in range(n_items)]
-        gaze_cols = ['gaze_{}'.format(i) for i in range(n_items)]
+        gaze_cols = ['cumulative_gaze_{}'.format(i) for i in range(n_items)]
         stimulus_cols = ['stimulus_{}'.format(i) for i in range(n_items)]
 
         values = data[value_cols][data['subject'] == subject].values
@@ -110,7 +110,7 @@ def simulate_subject(parameters, values, gaze, stimuli, trials,
 
     for i in range(n_items):
         df['item_value_{}'.format(i)] = np.repeat(values[:, i], n_repeats)
-        df['gaze_{}'.format(i)] = np.repeat(gaze[:, i], n_repeats)
+        df['cumulative_gaze_{}'.format(i)] = np.repeat(gaze[:, i], n_repeats)
         df['stimulus_{}'.format(i)] = np.repeat(stimuli[:, i], n_repeats)
 
     return df
@@ -144,8 +144,11 @@ def trialdrift(v, tau, gamma, zeta, values, gaze, zerotol=1e-10):
     """
     Compute drifts
     """
+
+    # Absolute decision signal
     A = gaze * (values + zeta) + (1 - gaze) * gamma * values
 
+    # Relative decision signal
     n_items = len(A)
     max_others = np.zeros(n_items)
     for item in range(n_items):
@@ -153,6 +156,7 @@ def trialdrift(v, tau, gamma, zeta, values, gaze, zerotol=1e-10):
     R_star = A - max_others
     R = v * 1 / (1 + np.exp(-tau * R_star))
 
+    # exclude items that were not seen
     R[gaze==0] = 0
     R[R < zerotol] = zerotol
     return R

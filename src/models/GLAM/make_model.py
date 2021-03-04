@@ -45,9 +45,9 @@ def make_ind_model(data_df, gaze_bias=True, gaze_bias_type='full', **kwargs):
 		s = pm.Uniform('s', 1e-7, 0.05, testval=1e-3)
 		tau = pm.Uniform('tau', 0, 10, testval=1)
 		if gaze_bias:
-			print('\n\t/!\ Using {} gaze bias'.format(gaze_bias_type))
+			print('\t/!\ Using {} gaze bias'.format(gaze_bias_type))
 			if gaze_bias_type == 'multiplicative':
-				gamma = pm.Uniform('gamma', -1, 1, testval=0.5)
+				gamma = pm.Uniform('gamma', 0, 1, testval=0.5)
 				zeta = pm.Deterministic('zeta', tt.constant(0, dtype='float32'))
 			elif gaze_bias_type == 'additive':
 				gamma = pm.Deterministic('gamma', tt.constant(1, dtype='float32'))
@@ -62,11 +62,11 @@ def make_ind_model(data_df, gaze_bias=True, gaze_bias_type='full', **kwargs):
 			zeta = pm.Deterministic('zeta', tt.constant(0, dtype='float32'))
 
 		# logp
-		def lda_logp_ind(rt,
-						 gaze,
-						 values,
-						 error_ll,
-						 zerotol):
+		def logp_ind(rt,
+					 gaze,
+					 values,
+					 error_ll,
+					 zerotol):
 
 			# # compute drifts
 			drift = tt_trialdrift(v,
@@ -94,7 +94,7 @@ def make_ind_model(data_df, gaze_bias=True, gaze_bias_type='full', **kwargs):
 			return tt.log(mixed_ll + zerotol)
 
 		# obs
-		obs = pm.DensityDist('obs', logp=lda_logp_ind,
+		obs = pm.DensityDist('obs', logp=logp_ind,
 							 observed=dict(rt=data_dict['rts'],
 										   gaze=data_dict['gaze'],
 										   values=data_dict['values'],

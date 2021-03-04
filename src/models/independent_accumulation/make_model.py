@@ -15,7 +15,10 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, **kwargs):
 
 	Args
 	---
-		subject_data (dataframe): Aggregate response data
+		subject_data (dataframe): aggregate response
+            data of a single subject
+        subject_gaze_data (dataframe): aggregate gaze
+            data of a single subject
 		gaze_bias (bool): whether to activate gaze bias
             or to set gamma=1 and zeta=0
 
@@ -47,13 +50,13 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, **kwargs):
 			zeta = pm.Deterministic('zeta', tt.constant(0, dtype='float32'))
 
 		# logp
-		def lda_logp_ind(rt,
-						 gaze_corrected,
-						 values,
-						 fixation_onset,
-						 n_seen,
-						 error_ll,
-						 zerotol):
+		def logp_ind(rt,
+					 gaze_corrected,
+					 values,
+					 gaze_onset,
+					 n_seen,
+					 error_ll,
+					 zerotol):
 
 			# compute drifts
 			drift = tt_trialdrift(v,
@@ -63,8 +66,8 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, **kwargs):
 								  gaze_corrected,
 								  zerotol)
 
-			# correct rt for fixation onset
-			time_seen = rt[:,None] - fixation_onset
+			# correct rt for gaze onset
+			time_seen = rt[:,None] - gaze_onset
 			time_seen = tt.where(time_seen < 1., 1., time_seen)
 
 			# compute corrected FTP
@@ -83,11 +86,11 @@ def make_ind_model(subject_data, subject_gaze_data, gaze_bias=True, **kwargs):
 			return tt.log(mixed_ll + zerotol)
 
 		# obs
-		obs = pm.DensityDist('obs', logp=lda_logp_ind,
+		obs = pm.DensityDist('obs', logp=logp_ind,
 							 observed=dict(rt=data_dict['rts'],
 										   gaze_corrected=data_dict['gaze_corrected'],
 										   values=data_dict['values'],
-										   fixation_onset=data_dict['fixation_onset'],
+										   gaze_onset=data_dict['gaze_onset'],
 										   n_seen=data_dict['n_seen'],
 										   error_ll=data_dict['error_ll'],
 										   zerotol=1e-10))

@@ -38,7 +38,7 @@ def format_data(data, gaze_data):
     values += 4
 
     # extract gaze
-    gaze = data[['gaze_{}'.format(i) for i in range(
+    gaze = data[['cumulative_gaze_{}'.format(i) for i in range(
         setsize)]].values.astype(np.int)
 
     # extract choices / RT
@@ -51,7 +51,7 @@ def format_data(data, gaze_data):
         trial_gaze_data = gaze_data[gaze_data['trial']==trial].copy()
         total_gaze_dur = trial_gaze_data['onset'].values[-1] + trial_gaze_data['dur'].values[-1]
         if total_gaze_dur > max_RT:
-            max_RT = total_gaze_dur
+            max_RT = np.int(total_gaze_dur)
     max_RT += 1 # add 1ms buffer
 
     # extract gaze(t) and values(t)
@@ -79,15 +79,9 @@ def format_data(data, gaze_data):
             others = np.arange(setsize)!=pos
             for ms in range(T, next_onset):
                 if (t >= onset) and (t <= offset):
-                    try:
-                        gaze_t[i,pos,t] = gaze_t[i,pos,t-1] + 1
-                    except:
-                        import pdb; pdb.set_trace()
+                    gaze_t[i,pos,t] = gaze_t[i,pos,t-1] + 1
                 else:
-                    try:
-                        gaze_t[i,pos,t] = gaze_t[i,pos,t-1]
-                    except:
-                        import pdb; pdb.set_trace()
+                    gaze_t[i,pos,t] = gaze_t[i,pos,t-1]
                 gaze_t[i,others,t] = gaze_t[i,others,t-1]
                 values_t[i,seen,t] = trial_values[seen]
                 t += 1

@@ -35,15 +35,15 @@ def compute_gaze_influence_score(data):
     choice[np.arange(df.shape[0]), df['choice'].values.astype('int32')] = 1
 
     # compute value measures
-    gaze = df[['gaze_{}'.format(i) for i in range(n_items)]].values
-    rel_gaze = np.zeros_like(gaze)
+    cumulative_gaze = df[['cumulative_gaze_{}'.format(i) for i in range(n_items)]].values
+    rel_gaze = np.zeros_like(cumulative_gaze)
     values = df[['item_value_{}'.format(i) for i in range(n_items)]].values
     rel_values = np.zeros_like(values)
     value_range = np.zeros_like(values)
     for t in range(values.shape[0]):
         for i in range(n_items):
             index = np.where(np.arange(n_items) != i)
-            rel_gaze[t, i] = gaze[t, i] - np.max(gaze[t, index])
+            rel_gaze[t, i] = cumulative_gaze[t, i] - np.max(cumulative_gaze[t, index])
             rel_values[t, i] = values[t, i] - np.mean(values[t, index])
             value_range[t, i] = np.max(
                 values[t, index]) - np.min(values[t, index])
@@ -57,7 +57,7 @@ def compute_gaze_influence_score(data):
                                rel_gaze=rel_gaze.ravel(),
                                gaze_pos=np.array(
                                    rel_gaze.ravel() > 0, dtype=np.bool),
-                               gaze=gaze.ravel()))
+                               cumulative_gaze=cumulative_gaze.ravel()))
 
     # extimate value-based choice prob.
     # for each individual and subtract
@@ -106,11 +106,11 @@ def compute_p_last_gaze_choice(data,
             should subject means be returned?
 
     is_return_data (bool):
-            should aggregate of subject-fixation data be returned?
+            should aggregate of subject gaze data be returned?
 
     Returns
     ---
-    (subject-fixation-data, subject-means), grand means, standard errors of grand means,
+    (subject-fgaze-data, subject-means), grand means, standard errors of grand means,
     """
 
     subjects = data.subject.unique()
@@ -125,9 +125,9 @@ def compute_p_last_gaze_choice(data,
         last_gaze_to_choice = []
         for trial in subject_gaze_data.trial.unique():
             trial_gaze_data = subject_gaze_data[subject_gaze_data['trial']==trial].copy()
-            last_fixated_item = trial_gaze_data.tail(1)['item'].values[0]
+            last_seen_item = trial_gaze_data.tail(1)['item'].values[0]
             trial_choice = trial_gaze_data['choice'].values[0]
-            if last_fixated_item == trial_choice:
+            if last_seen_item == trial_choice:
                 last_gaze_to_choice.append(np.ones(trial_gaze_data.shape[0]))
             else:
                 last_gaze_to_choice.append(np.zeros(trial_gaze_data.shape[0]))
@@ -322,7 +322,7 @@ def aggregate_subject_level_data(data, n_items):
     of all positive and negative relative gaze values
     (see manuscript)
 
-    Parameters
+    Input
     ----------
     data : pandas.DataFrame
         DataFrame containing the experimental data.

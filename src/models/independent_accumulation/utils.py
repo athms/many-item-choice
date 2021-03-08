@@ -79,7 +79,7 @@ def add_gaze_corrected(data, gaze_data):
         for item in range(setsize):
             # when item was first seen
             item_gaze_onset = trial_df['gaze_onset_{}'.format(item)].values[0]
-            if trial_rt > item_fix_onset:
+            if trial_rt > item_gaze_onset:
                 # how long it was seen
                 item_seen_time = trial_rt - item_gaze_onset
                 # fraction looked at of item seen time

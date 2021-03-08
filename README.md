@@ -123,5 +123,5 @@ cd src
 python model-recovery.py
 ```
 
-Note that the model recovery is based on the individual model fits for the choice set size with 9 items and can thus only be computed if these fits exits!
+Note that the model recovery is based on the individual model fits for the choice set size with 9 items and can thus only be computed if these fits exist!
 

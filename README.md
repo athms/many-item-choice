@@ -1,13 +1,13 @@
-## Uncovering the computational mechanisms underlying many-alternative choice
+# Uncovering the computational mechanisms underlying many-alternative choice
 
 This repository contains all code and data for:
 
 Thomas, A., Molter, F., & Krajbich, I. (2020, March 19). Uncovering the Computational Mechanisms Underlying Many-Alternative Choice. https://doi.org/10.31234/osf.io/tk6qe
 
-Each jupyter notebook in [src/](src/) reproduces one of the figures of the manuscript. 
+All code underlying this project is contained in [src/](src/); Each jupyter notebook in reproduces one of the figures of the manuscript. 
 
 
-### Local installation
+## Local installation
 
 **1. Clone and switch to this repository:**
 
@@ -20,13 +20,13 @@ cd many-item-choice
 
 I recommend setting up a new Python environment (e.g., with the [miniconda installer](https://docs.conda.io/en/latest/miniconda.html)). 
 
-You can recreate our [Anaconda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) using the following command:
+To recreate our [Anaconda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) use the following command:
 
 ```bash
 conda env create -f environment.yml
 ```
 
-This will create a Python 3.6 environment with the name `many-item-choice` that includes all necessary dependencies.
+This will create a Python 3.6 environment (including all dependencies) with the name `many-item-choice`.
 
 You can activate the new environment as follows:
 
@@ -40,7 +40,7 @@ conda activate many-item-choice
 jupyter notebook
 ```
 
-### The data
+## The data
 
 All data of this project is included in the [`data`](data/) repository.
 
@@ -92,7 +92,7 @@ Liking rating files contain the following information (each row indicates one ex
 
 ### A few notes before computing the notebooks
 
-This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the [results/](results/) directory. Thus, if you want to re-compute a specific (or all) results, delete (or rename) the respective output files or folders. 
+This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the [results/](results/) directory. Thus, if you want to re-compute a specific result (or all of them), delete (or rename) the respective output files or folder. 
 
 **1. Fitting the individual models:**
 
@@ -116,12 +116,12 @@ done
 
 **2. Running the model recovery:**
 
-The model recovery can be computed by the use of [src/model-recovery.py](src/model-recovery.py) script, before computing all figure supplements of Figure 5:
+The model recovery can be computed by the use of [src/model-recovery.py](src/model-recovery.py):
 
 ```bash
 cd src
 python model-recovery.py
 ```
 
-Note that the model recovery is based on the individual model fits for the choice set size with 9 items and can thus only be computed if these fits exist!
+Note that the model recovery is based on the individual model fits for the 9-item choice sets and can thus only be computed if these fits exist in [`results/posterior_traces`](results/posterior_traces/)!
 

@@ -89,7 +89,7 @@ Liking rating files contain the following information (each row indicates one ex
 - `rating` (float): liking rating
 
 
-### A few notes before computing the notebooks
+## A few notes before computing the notebooks
 
 This project involves many computationally intensive analyses, which can take several days to compute (depending on your machine). By default, many results are therefore read from the repository, if the respective output files exist in the [results/](results/) directory. Thus, if you want to re-compute a specific result (or all of them), delete (or rename) the respective output files or folder. 
 

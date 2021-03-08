@@ -1,4 +1,4 @@
-## Uncovering the Computational Mechanisms Underlying Many-Alternative Choice
+## Uncovering the computational mechanisms underlying many-alternative choice
 
 This repository contains all code and data for:
 
@@ -7,7 +7,7 @@ Thomas, A., Molter, F., & Krajbich, I. (2020, March 19). Uncovering the Computat
 Each jupyter notebook in [src/](src/) reproduces one of the figures of the manuscript. 
 
 
-### Local installation and running the notebooks
+### Local installation
 
 **1. Clone and switch to this repository:**
 
@@ -16,17 +16,17 @@ git clone https://github.com/athms/many-item-choice.git
 cd many-item-choice
 ```
 
-**2. Install all dependencies** listed in [`requirements.txt`](requirements.txt). 
+**2. Install all dependencies:**
 
 I recommend setting up a new Python environment (e.g., with the [miniconda installer](https://docs.conda.io/en/latest/miniconda.html)). 
 
-You can create a new [conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) using the following command:
+You can recreate our [Anaconda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) using the following command:
 
 ```bash
-conda create --name many-item-choice python=3.6
+conda env create -f environment.yml
 ```
 
-This will create a Python 3.6 environment with the name `many-item-choice`.
+This will create a Python 3.6 environment with the name `many-item-choice` that includes all necessary dependencies.
 
 You can activate the new environment as follows:
 
@@ -34,17 +34,61 @@ You can activate the new environment as follows:
 conda activate many-item-choice
 ```
 
-and then install all required dependencies with: 
-
-```bash
-pip3 install -r requirements.txt
-```
-
 **3. Start the Jupyter notebook server:**
 
 ```bash
 jupyter notebook
 ```
+
+### The data
+
+All data of this project is included in the [`data`](data/) repository.
+
+There you will find two types of main files: aggregate data (contained in [`data/summary_files/`](data/summary_files/) and individual subject data (contained in [`data/subject_files/`](data/subject_files/). 
+
+All files are separated by choice set sizes (9, 16, 25, and 36). 
+
+Aggregate data files contain the following information (each row indicates on experiment trial): 
+
+- `{setsize, subject, trial}` (int): indicators for the choice set size, subject, and trial
+- `rt` (float): response time (in ms)
+- `rt_choice_indication` (float): choice indication time (in ms; defined as time between space bar press and click on an item image)
+- `choice` (int): chosen item (items numbers start at 0 and increase from left to right and top to bottom)
+- `best_chosen` (float [0, 1]): whether the subject choose the item with the highest liking value in that trial (1) or not (0)?
+- `best_seen_chosen` (float [0, 1]): whether the subject choose the item with the highest liking value in that trial from the set of items that they have looked at (1) or not (0)?
+- `longest_chosen` (float [0, 1]): whether the subject chose the item they have looked at longest (1) or not (0)?
+- `gaze_count` (float): number of gazes in that trial (a gaze is defined as all uninterrupted fixations to an item)
+- `returning_gaze_count` (float): number of returning gazes in that trial
+- `seen_items_choice` (float): number of items that subject looked at in that trial
+- `item_value_{0-setsize}` (float): liking rating value of each item in that trial
+- `cumulative_gaze_{0-setsize}` (float): cumulative gaze of each item in that trial
+- `stimulus_{0-setsize}` (string): filename of snack food stimulus (files are stored in [`data/stimuli`](data/stimuli)) of each item
+- `gaze_onset_{0-setsize}` (float): time point (in ms) after trial onset that item was first looked at
+
+There are two types of individual subject data files:
+
+Gaze files contain the following information (each row indicates on gaze): 
+
+- `{setsize, subject, trial, item}` (int): indicators for the choice set size, subject, trial, and looked-at item
+- `dur` (float): duration of gaze (in ms)
+- `onset` (float): onset of gaze after trial onset (in ms)
+- `stimulus` (string): filename of snack food stimulus
+- `gaze_num` (float): number of gaze in trial
+- `is_returning` (float [0, 1]): is this a returning gaze (1) or not (0)?
+- `returning_gaze_count` (float): counter of returning gazes for this item
+- `is_last` (float [0, 1]): is this the last gaze of the trial?
+- `is_first` (float [0, 1]): is this the first gaze of the trial?
+- `item_value` (float): liking rating of looked-at item
+- `choice` (int): chosen item in that trial
+- `is_last_to_choice` (float [0, 1]): whether chosen item was looked at last in that trial (1) or not (0)?
+
+Liking rating files contain the following information (each row indicates one experiment trial): 
+
+- `{subject, trial}` (int): indicators for the subject and liking rating trial
+- `rt` (float): response time (in ms)
+- `stimulus` (string): filename of snack food stimulus
+- `rating` (float): liking rating
+
 
 ### A few notes before computing the notebooks
 
@@ -78,4 +122,6 @@ The model recovery can be computed by the use of [src/model-recovery.py](src/mod
 cd src
 python model-recovery.py
 ```
+
+Note that the model recovery is based on the individual model fits for the choice set size with 9 items and can thus only be computed if these fits exits!
 

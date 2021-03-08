@@ -1,4 +1,4 @@
-name: GLAM
+name: many-item-choice
 channels:
   - defaults
 dependencies:

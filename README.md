@@ -63,7 +63,7 @@ Aggregate data files contain the following information (each row indicates on ex
 - `item_value_{0-setsize}` (float): liking rating value of each item in that trial
 - `cumulative_gaze_{0-setsize}` (float): cumulative gaze of each item in that trial
 - `stimulus_{0-setsize}` (string): filename of snack food stimulus (files are stored in [`data/stimuli`](data/stimuli)) of each item
-- `gaze_onset_{0-setsize}` (float): time point (in ms) after trial onset that item was first looked at
+- `gaze_onset_{0-setsize}` (float): time point (in ms) after trial onset at which item was first looked at
 
 There are two types of individual subject data files:
 

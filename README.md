@@ -4,7 +4,7 @@ This repository contains all code and data for:
 
 Thomas, A., Molter, F., & Krajbich, I. (2020, March 19). Uncovering the Computational Mechanisms Underlying Many-Alternative Choice. https://doi.org/10.31234/osf.io/tk6qe
 
-All code underlying this project is contained in [src/](src/); Each jupyter notebook in reproduces one of the figures of the manuscript. 
+All code underlying this project is contained in [src/](src/), with one [jupyter notebook](https://jupyter.org) for each figure of the manuscript. 
 
 
 ## Local installation
@@ -20,15 +20,15 @@ cd many-item-choice
 
 I recommend setting up a new Python environment (e.g., with the [miniconda installer](https://docs.conda.io/en/latest/miniconda.html)). 
 
-To recreate our [Anaconda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) use the following command:
+To recreate our [environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) use the following command:
 
 ```bash
 conda env create -f environment.yml
 ```
 
-This will create a Python 3.6 environment (including all dependencies) with the name `many-item-choice`.
+This will create a new Python 3.6 environment with the name `many-item-choice` that includes all required dependencies.
 
-You can activate the new environment as follows:
+You can then activate this environment as follows:
 
 ```bash
 conda activate many-item-choice
@@ -44,11 +44,12 @@ jupyter notebook
 
 All data of this project is included in the [`data`](data/) repository.
 
-There you will find two main types of files (separated by choice set size):
-- aggregate data (contained in [`data/summary_files/`](data/summary_files/)) and
-- individual subject data (contained in [`data/subject_files/`](data/subject_files/)).  
+There you will find two main file types:
+- Aggregate data (contained in [`data/summary_files/`](data/summary_files/)) and
+- Individual subject data (contained in [`data/subject_files/`](data/subject_files/)).  
+*Note that all files are separated by choice set size (9, 16, 25, and 36).*
 
-Aggregate data files contain the following information (with one row indicates per trial): 
+*Aggregate data* files contain the following information (with one row per trial): 
 
 - `{setsize, subject, trial}` (int): indicators for the choice set size, subject, and trial
 - `rt` (float): response time (in ms)
@@ -65,14 +66,14 @@ Aggregate data files contain the following information (with one row indicates p
 - `stimulus_{0-setsize}` (string): filename of respective snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
 - `gaze_onset_{0-setsize}` (float): time point (in ms) at which the item was first looked at in that trial
 
-There are two types of individual subject data files:
+There are two types of *individual subject data* files:
 
-Gaze files contain the following information (with one row for each gaze): 
+*Gaze files* contain one row for each gaze with the following columns: 
 
-- `{setsize, subject, trial, item}` (int): indicators for the choice set size, subject, trial, and seen item
+- `{setsize, subject, trial, item}` (int): indicators for the choice set size, subject, trial, and looked-at item
 - `dur` (float): duration of the gaze (in ms)
-- `onset` (float): onset of the gaze (in ms; relative to trial onset)
-- `stimulus` (string): filename of snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
+- `onset` (float): onset of the gaze (in ms; relative to the trial onset)
+- `stimulus` (string): filename of the snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
 - `gaze_num` (float): gaze number in trial
 - `is_returning` (float [0, 1]): is this a returning gaze (1) or not (0)?
 - `returning_gaze_count` (float): counter of gazes returning to this item
@@ -81,13 +82,14 @@ Gaze files contain the following information (with one row for each gaze):
 - `choice` (int): chosen item
 - `is_last_to_choice` (float [0, 1]): whether chosen item was looked at last in that trial (1) or not (0)?
 
-Liking rating files contain the following information (each row indicates one experiment trial): 
+*Liking rating* files contain one row per rating trial with the following columns: 
 
 - `{subject, trial}` (int): indicators for the subject and trial
 - `rt` (float): response time (in ms)
-- `stimulus` (string): filename of snack food stimulus
+- `stimulus` (string): filename of the snack food stimulus
 - `rating` (float): liking rating
 
+The folder [data/stimulus_positions](data/stimulus_positions) further contains the item positions on the experiment screen for each choice set size.
 
 ## A few notes before computing the notebooks
 

@@ -50,7 +50,7 @@ There you will find two main file types:
 
 *Note that all files are separated by choice set size (9, 16, 25, and 36).*
 
-*Aggregate data* files contain the following information (with one row per trial): 
+**Aggregate data** files contain the following information (with one row per trial): 
 
 - `{setsize, subject, trial}` (int): indicators for the choice set size, subject, and trial
 - `rt` (float): response time (in ms)
@@ -69,7 +69,7 @@ There you will find two main file types:
 
 There are two types of *individual subject data* files:
 
-*Gaze files* contain one row for each gaze with the following columns: 
+**Gaze files** contain one row for each gaze with the following columns: 
 
 - `{setsize, subject, trial, item}` (int): indicators for the choice set size, subject, trial, and looked-at item
 - `dur` (float): duration of the gaze (in ms)
@@ -83,7 +83,7 @@ There are two types of *individual subject data* files:
 - `choice` (int): chosen item
 - `is_last_to_choice` (float [0, 1]): whether chosen item was looked at last in that trial (1) or not (0)?
 
-*Liking rating* files contain one row per rating trial with the following columns: 
+**Liking rating** files contain one row per rating trial with the following columns: 
 
 - `{subject, trial}` (int): indicators for the subject and trial
 - `rt` (float): response time (in ms)

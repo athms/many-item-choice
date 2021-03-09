@@ -111,7 +111,7 @@ To iteratively fit the models for all subjects in all set size conditions, run:
 ```bash
 cd src
 for setsize in 9 16 25 36; do
-  for subject in $(seq 0 49); do
+  for subject in $(seq 0 48); do
     python fit_subject-setsize-models.py $subject $setsize;
   done;
 done

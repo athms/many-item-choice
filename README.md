@@ -47,6 +47,7 @@ All data of this project is included in the [`data`](data/) repository.
 There you will find two main file types:
 - Aggregate data (contained in [`data/summary_files/`](data/summary_files/)) and
 - Individual subject data (contained in [`data/subject_files/`](data/subject_files/)).  
+
 *Note that all files are separated by choice set size (9, 16, 25, and 36).*
 
 *Aggregate data* files contain the following information (with one row per trial): 

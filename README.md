@@ -55,7 +55,7 @@ There you will find two main file types:
 - `{setsize, subject, trial}` (int): indicators for the choice set size, subject, and trial
 - `rt` (float): response time (in ms)
 - `rt_choice_indication` (float): choice indication time (in ms; defined as time between space bar press and click on an item image; see the manuscript for details)
-- `choice` (int): chosen item (items numbers start at 0 and increase from left-to-right and top-to-bottom; see the manuscript)
+- `choice` (int): chosen item
 - `best_chosen` (float [0, 1]): whether the subject choose the item with the highest value in that trial (1) or not (0)?
 - `best_seen_chosen` (float [0, 1]): whether the subject choose the item with the highest value that they have seen in that trial (1) or not (0)?
 - `longest_chosen` (float [0, 1]): whether the subject chose the item that they have looked at longest (1) or not (0) in that trial?
@@ -67,6 +67,8 @@ There you will find two main file types:
 - `stimulus_{0-setsize}` (string): filename of respective snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
 - `gaze_onset_{0-setsize}` (float): time point (in ms) at which the item was first looked at in that trial
 
+Note that items numbers start at 0 and increase from left-to-right and top-to-bottom. The item in the top left thus has number 0 while the item in the bottom right has the highest number in the choice set,
+
 There are two types of *individual subject data* files:
 
 **Gaze files** contain one row for each gaze with the following columns: 
@@ -77,7 +79,7 @@ There are two types of *individual subject data* files:
 - `stimulus` (string): filename of the snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
 - `gaze_num` (float): gaze number in trial
 - `is_returning` (float [0, 1]): is this a returning gaze (1) or not (0)?
-- `returning_gaze_count` (float): counter of gazes returning to this item
+- `returning_gaze_count` (float): counter for returning gazes to this item
 - `is_{first,last}` (float [0, 1]): is this the first/last gaze of the trial?
 - `item_value` (float): value of the item (as indicated by liking rating)
 - `choice` (int): chosen item

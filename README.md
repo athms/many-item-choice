@@ -42,11 +42,11 @@ jupyter notebook
 
 ## The data
 
-All data of this project is included in the [`data`](data/) repository.
+All data of this project are included in the [`data`](data/) repository.
 
 There you will find two main file types:
-- Aggregate data (contained in [`data/summary_files/`](data/summary_files/)) and
-- Individual subject data (contained in [`data/subject_files/`](data/subject_files/)).  
+- Aggregate data files (contained in [`data/summary_files/`](data/summary_files/)) and
+- Individual subject data files (contained in [`data/subject_files/`](data/subject_files/)).  
 
 *Note that all files are separated by choice set size (9, 16, 25, and 36).*
 
@@ -98,7 +98,7 @@ This project involves many computationally intensive analyses, which can take se
 
 **1. Fitting the individual models:**
 
-To fit the individual models (PSM, IAM, and GLAM) for one subject in one choice set size, run:
+To fit the three model types (PSM, IAM, and GLAM) for one subject in one choice set size, run:
 
 ```bash
 cd src
@@ -106,7 +106,7 @@ python fit_subject-setsize-models.py <subject> <set size>
 ```
 This script will fit the passive- and active-gaze variants of the three models for the specified subject and choice set size.
 
-To iteratively fit the models for all subjects in all set size conditions, run:
+To iteratively fit all models for all subjects in all set size conditions, run:
 
 ```bash
 cd src

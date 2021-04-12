@@ -2,7 +2,7 @@
 
 This repository contains all code and data for:
 
-Thomas, A., Molter, F., & Krajbich, I. (2020, March 19). Uncovering the Computational Mechanisms Underlying Many-Alternative Choice. https://doi.org/10.31234/osf.io/tk6qe
+Thomas, A. W., Molter, F., & Krajbich, I. (2021). Uncovering the computational mechanisms underlying many-alternative choice. Elife, 10, e57012.[doi.org/10.7554/eLife.57012](https://doi.org/10.7554/eLife.57012)
 
 All code underlying this project is contained in [src/](src/), with one [jupyter notebook](https://jupyter.org) for each figure of the manuscript. 
 

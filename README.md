@@ -56,18 +56,18 @@ There you will find two main file types:
 - `rt` (float): response time (in ms)
 - `rt_choice_indication` (float): choice indication time (in ms; defined as time between space bar press and click on an item image; see the manuscript for details)
 - `choice` (int): chosen item
+- `gaze_count` (float): overall number of gazes in that trial (a gaze is defined as all consecutive and uninterrupted fixations to an item)
+- `seen_items_count` (float): number of items that the subject looked at in that trial
+- `returning_gaze_count` (float): overall number of returning gazes in that trial
 - `best_chosen` (float [0, 1]): whether the subject choose the item with the highest value in that trial (1) or not (0)?
 - `best_seen_chosen` (float [0, 1]): whether the subject choose the item with the highest value that they have seen in that trial (1) or not (0)?
 - `longest_chosen` (float [0, 1]): whether the subject chose the item that they have looked at longest (1) or not (0) in that trial?
-- `gaze_count` (float): overall number of gazes in that trial (a gaze is defined as all consecutive and uninterrupted fixations to an item)
-- `returning_gaze_count` (float): overall number of returning gazes in that trial
-- `seen_items_choice` (float): number of items that the subject looked at in that trial
 - `item_value_{0-setsize}` (float): value of each choice set item (as indicated by the liking rating)
 - `cumulative_gaze_{0-setsize}` (float): cumulative gaze of each choice set item (defined as the fraction of trial time that the subject spent looking at the item)
 - `stimulus_{0-setsize}` (string): filename of respective snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
 - `gaze_onset_{0-setsize}` (float): time point (in ms) at which the item was first looked at in that trial
 
-Note that items numbers start at 0 and increase from left-to-right and top-to-bottom. The item in the top left thus has number 0 while the item in the bottom right has the highest number in the choice set,
+Note that item numbers start with 0 and increase from *left-to-right* and *top-to-bottom*. The item in the top left thus has number 0 while the item in the bottom right has the highest number in the choice set.
 
 There are two types of *individual subject data* files:
 
@@ -76,12 +76,12 @@ There are two types of *individual subject data* files:
 - `{setsize, subject, trial, item}` (int): indicators for the choice set size, subject, trial, and looked-at item
 - `dur` (float): duration of the gaze (in ms)
 - `onset` (float): onset of the gaze (in ms; relative to the trial onset)
-- `stimulus` (string): filename of the snack food stimulus (files are stored in [`data/stimuli`](data/stimuli))
+- `stimulus` (string): filename of the snack food stimulus (stimulus files are stored in [`data/stimuli`](data/stimuli))
 - `gaze_num` (float): gaze number in trial
 - `is_returning` (float [0, 1]): is this a returning gaze (1) or not (0)?
 - `returning_gaze_count` (float): counter for returning gazes to this item
 - `is_{first,last}` (float [0, 1]): is this the first/last gaze of the trial?
-- `item_value` (float): value of the item (as indicated by liking rating)
+- `item_value` (float): value of the item (as indicated by its liking rating)
 - `choice` (int): chosen item
 - `is_last_to_choice` (float [0, 1]): whether chosen item was looked at last in that trial (1) or not (0)?
 

@@ -50,7 +50,7 @@ There you will find two main file types:
 
 *Note that all files are separated by choice set size (9, 16, 25, and 36).*
 
-**Aggregate data** files contain the following information (with one row per trial): 
+**Aggregate data** contain one row for each trial with the following information: 
 
 - `{setsize, subject, trial}` (int): indicators for the choice set size, subject, and trial
 - `rt` (float): response time (in ms)
